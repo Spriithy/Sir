@@ -1,0 +1,11 @@
+var foo = 0, foo;
+
+static var bar = true, bar;
+
+extern var baz, bor;
+
+routine start () {}
+
+static routine end(a, b) {}
+
+extern routine max(x, y);

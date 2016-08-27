@@ -1,0 +1,210 @@
+________________________________________________________________________________
+================================================================================
+								SIR GRAMMAR
+================================================================================
+
+/* { <foo> } denotes zero or more occurrences of rule <foo>                   */
+
+-=----------------------------------------------------------------------------=-
+ |  							 MISC RULES									  |
+-=----------------------------------------------------------------------------=-
+
+ID
+	: id-start {id-part}
+	| id-part
+	;
+
+ID-list
+	: ID
+	| ID ',' ID-list
+	;
+
+id-start
+	: '_' | letter
+	;
+
+id-part
+	: id-start
+	| number
+	;
+
+assign-op
+	: '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '~=' | '>>='
+	| '<<='
+	;
+
+unary-op
+	: '+' | '-' | '!' | '~'
+	;
+
+-=----------------------------------------------------------------------------=-
+ |  							 MAIN RULES									  |
+-=----------------------------------------------------------------------------=-
+
+program
+	: {global-var-declaration} {routine-declaration}
+	;
+
+block
+	: {statement}
+	;
+
+routine-declaration
+	: 'static' routine-header block
+	| 'extern' routine-header ';'
+	| routine-header block
+	;
+
+routine-header
+	: 'routine' ID routine-arg-list
+	;
+
+routine-arg-list
+	: '()'
+	| '(' ID-list ')'
+	;
+
+routine-param-list
+	: arg-list
+	| '(' assign-list ')'
+	;
+
+global-variable-declaration
+	: 'static' var-declaration ';'
+	| 'extern' var-declaration
+	| var-declaration ';'
+	;
+
+statement
+	: ';'
+	| label-declaration
+	| goto-statement ';'
+	| routine-call ';'
+	| var-declaration ';'
+	| assign-statement ';'
+	|
+	;
+
+assign-statement
+	: ID assign-op expression
+	;
+
+label-declaration
+	: ID ':'
+	;
+
+goto-statement
+	: 'goto' ID
+	| 'goto' '(' ID ')'
+	;
+
+routine-call
+	: ID routine-param-list
+	;
+
+var-declaration
+	: 'var' assign-list
+	;
+
+assign-list
+	: assign
+	| assign ',' assign-list
+	;
+
+assign
+	: ternary-expression
+	| unary-expression '=' expression
+	| '(' assign ')'
+	;
+
+-=----------------------------------------------------------------------------=-
+ |  							EXPRESSION RULES							  |
+-=----------------------------------------------------------------------------=-
+
+expression
+	: assign
+	| '(' expression ')'
+	;
+
+primary-expression
+	: ID
+	| number
+	| string
+	| '(' expression ')'
+	;
+
+postfix-expression
+	: primary-expression
+	| postfix-expression '[' expression ']'
+	| postfix-expression '(' routine-param-list ')'
+	| postfix-expression '.'
+	| postfix-expression '++'
+	| postfix-expression '--'
+	;
+
+unary-expression
+	: postfix-expression
+	| unary-op unary-expression
+	;
+
+multiplicative-expression
+	: unary-expression
+	| multiplicative-expression '*' unary-expression
+	| multiplicative-expression '/' unary-expression
+	| multiplicative-expression '%' unary-expression
+	;
+
+additive-expression
+	: multiplicative-expression
+	| additive-expression '+' multiplicative-expression
+	| additive-expression '-' multiplicative-expression
+	;
+
+shift-expression
+	: additive-expression
+	| shift-expression '>>' additive-expression
+	| shift-expression '<<' additive-expression
+	;
+
+relational-expression
+	: shift-expression
+	| relational-expression '<'  shift-expression
+	| relational-expression '<=' shift-expression
+	| relational-expression '>'  shift-expression
+	| relational-expression '>=' shift-expression
+	;
+
+equality-expression
+	: relational-expression
+	| equality-expression '==' relational-expression
+	| equality-expression '!=' relational-expression
+	;
+
+bAND-expression
+	: equality-expression
+	| bAND-expression '&' equality-expression
+	;
+
+bXOR-expression
+	: bAND-expression
+	| bXOR-expression '^' bAND-expression
+	;
+
+bOR-expression
+	: bXOR-expression
+	| bOR-expression '|' bXOR-expression
+	;
+
+lAND-expression
+	: bOR-expression
+	| lAND-expression '&&' bOR-expression
+	;
+
+lOR-expression
+	: lAND-expression
+	| lOR-expression '||' lAND-expression
+	;
+
+ternary-expression
+	: lOR-expression
+	| lOR-expression '?' expression ':' ternary-expression

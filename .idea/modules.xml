@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Sir.iml" filepath="$PROJECT_DIR$/Sir.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SirLex/SirLex.iml" filepath="$PROJECT_DIR$/SirLex/SirLex.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SirParse/SirParse.iml" filepath="$PROJECT_DIR$/SirParse/SirParse.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SirVM/SirVM.iml" filepath="$PROJECT_DIR$/SirVM/SirVM.iml" />
+    </modules>
+  </component>
+</project>
